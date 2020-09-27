@@ -17,7 +17,6 @@ pub fn entry(
     let valid_signature = f.sig.constness.is_none()
         && f.vis == syn::Visibility::Inherited
         && f.sig.abi.is_none()
-        && f.sig.inputs.is_empty()
         && f.sig.generics.params.is_empty()
         && f.sig.generics.where_clause.is_none()
         && f.sig.variadic.is_none()
@@ -58,6 +57,15 @@ pub fn entry(
     let stmts = block.stmts;
     let unsafety = f.sig.unsafety;
 
+    let peripheral_arg = if let Some(syn::FnArg::Typed(arg)) = f.sig.inputs.first() {
+        let ty = &arg.ty;
+        Some(quote::quote! {
+            let #arg = #ty::take().unwrap();
+        })
+    } else {
+        None
+    };
+
     quote::quote! (
         #[cfg(not(any(doc, target_arch = "avr")))]
         compile_error!(
@@ -70,6 +78,7 @@ pub fn entry(
         #[doc(hidden)]
         #[export_name = "main"]
         pub #unsafety extern "C" fn #ident() -> ! {
+            #peripheral_arg
             #(#stmts)*
         }
     )
