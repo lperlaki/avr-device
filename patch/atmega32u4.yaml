@@ -11,3 +11,60 @@ _include:
   - "common/wdt.yaml"
 
   - "timer/atmega32u4.yaml"
+
+
+USB_DEVICE:
+  UECFG0X:
+    EPTYPE:
+      CONTROL: [0b00, Control]
+      ISOCHRONOUS: [0b01, Isochronous]
+      BULK: [0b10, Bulk]
+      INTERRUPT: [0b11, Interrrupt]
+  UECFG1X:
+    EPSIZE:
+      BYTES_8: [0b000, 8 bytes]
+      BYTES_16: [0b001, 16 bytes]
+      BYTES_32: [0b010, 32 bytes]
+      BYTES_64: [0b011, 64 bytes]
+      BYTES_128: [0b100, 128 bytes]
+      BYTES_256: [0b101, 256 bytes]
+      BYTES_512: [0b110, 512 bytes]
+    EPBK:
+      SINGLE: [0b00, "Single Bank"]
+      DOUBLE: [0b01, "Double Bank"]
+
+  UENUM:
+    _add:
+      EPNUM:
+        description: "Endpoint Number"
+        bitOffset: 0
+        bitWidth: 2
+        access: read-write
+
+    EPNUM:
+      EP_0: [0b000, Endpoint 0]
+      EP_1: [0b001, Endpoint 1]
+      EP_2: [0b010, Endpoint 2]
+      EP_3: [0b011, Endpoint 3]
+      EP_4: [0b100, Endpoint 4]
+      EP_5: [0b101, Endpoint 5]
+      EP_6: [0b110, Endpoint 6]
+  # _delete:
+  #   _registers:
+  #     - UEBCLX
+  #     - UEBCHX
+  # _add:
+  #   _registers:
+  #     UEBCX:
+  #       description: Read UEBCX
+  #       addressOffset: 0x1B
+  #       size: 16
+  #       access: read-only
+  #       fields:
+  #         BYCT:
+  #           description: Byte Count
+  #           bitOffset: 0
+  #           bitWidth: 12
+            
+
+  
